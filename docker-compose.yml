@@ -9,6 +9,8 @@ services:
     env_file:
       - .env
     restart: always
+    volumes:
+      - tokens_data:/app/tokens
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
       interval: 30s
@@ -19,3 +21,6 @@ services:
       options:
         max-size: "10m"
         max-file: "5"
+
+volumes:
+  tokens_data:

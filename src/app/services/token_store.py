@@ -1,9 +1,9 @@
-# src/app/services/token_store.py
 from abc import ABC, abstractmethod
 from typing import Optional, Dict
 import json
 from pathlib import Path
 from datetime import datetime
+
 
 class TokenStore(ABC):
     @abstractmethod
@@ -13,6 +13,7 @@ class TokenStore(ABC):
     @abstractmethod
     def save_tokens(self, data: Dict) -> None:
         ...
+
 
 class FileTokenStore(TokenStore):
     def __init__(self, path: str):
@@ -24,6 +25,11 @@ class FileTokenStore(TokenStore):
         return json.loads(self.path.read_text(encoding="utf-8"))
 
     def save_tokens(self, data: Dict) -> None:
-        # можешь добавить сюда время обновления
+        # добавляем время последнего обновления
         data["updated_at"] = datetime.utcnow().isoformat()
-        self.path.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
+        # на всякий случай создаём директорию, если её нет
+        self.path.parent.mkdir(parents=True, exist_ok=True)
+        self.path.write_text(
+            json.dumps(data, ensure_ascii=False, indent=2),
+            encoding="utf-8",
+        )

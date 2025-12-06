@@ -8,8 +8,9 @@ from src.app.services.token_store import FileTokenStore
 
 app = FastAPI()
 
-token_store = FileTokenStore(settings.TOKEN_FILE_PATH)
-amo_client = AmoClient(token_store)
+token_store = FileTokenStore("/app/tokens/token.json")
+amo_client = AmoClient(token_store=token_store)
+
 
 @app.get("/amo/login")
 def amo_login():
